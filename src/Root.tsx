@@ -11,6 +11,7 @@ const placeholder: VideoProps = {
   scenes: [],
   overlays: [],
   captions: [],
+  shakes: [],
   music: null,
   brand: {
     name: "BDAS",

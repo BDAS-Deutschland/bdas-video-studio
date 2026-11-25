@@ -4,8 +4,10 @@ import type { Brand, CardScene as CardSceneT } from "../types";
 import { useFadeIn } from "../useFade";
 
 export const CardScene = ({ scene, brand }: { scene: CardSceneT; brand: Brand }) => {
-  const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
+  // Bei Übergängen beginnt die Sequenz `lead` Frames vor dem Schnitt; Animationen zählen ab dem Schnitt.
+  const frame = useCurrentFrame() - (scene.lead ?? 0);
+  const { fps } = useVideoConfig();
+  const durationInFrames = scene.durationInFrames;
   const { unit, left, right } = useLayout();
   const accent = scene.variant === "accent" || (scene.type === "card" && scene.variant !== "light");
   const bg = accent ? brand.colors.accent : brand.colors.background;
@@ -14,7 +16,8 @@ export const CardScene = ({ scene, brand }: { scene: CardSceneT; brand: Brand })
 
   const enter = spring({ frame, fps, config: { damping: 200 } });
   const subEnter = spring({ frame: frame - 6, fps, config: { damping: 200 } });
-  const exit = interpolate(frame, [durationInFrames - 6, durationInFrames], [1, 0], { extrapolateLeft: "clamp" });
+  // Mit Übergang hinaus bleibt der Text stehen und wandert mit dem Übergang aus dem Bild.
+  const exit = scene.tail ? 1 : interpolate(frame, [durationInFrames - 6, durationInFrames], [1, 0], { extrapolateLeft: "clamp" });
   const opacity = useFadeIn(scene.transition === "fade");
 
   return (

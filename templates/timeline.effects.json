@@ -1,0 +1,53 @@
+{
+  "format": "9:16",
+  "fps": 30,
+  "captions": true,
+  "music": { "src": "music/track.mp3", "volume": 0.14, "duckTo": 0.045 },
+  "scenes": [
+    {
+      "id": "hook", "type": "clip", "src": "raw/interview.mp4", "in": 0.22, "out": 5.49, "zoom": 1.0, "zoomTo": 1.05,
+      "overlays": [
+        { "type": "punch", "at": 4.52, "duration": 0.75, "scale": 1.2, "origin": "face" },
+        { "type": "sfx", "name": "boom", "at": 4.52, "align": "peak" }
+      ]
+    },
+    {
+      "id": "lage", "type": "clip", "src": "raw/interview.mp4", "in": 5.56, "out": 9.27, "transition": "whip-left",
+      "overlays": [
+        { "type": "draw", "shape": "circle", "x": 0.38, "y": 0.45, "w": 0.42, "at": 0.8, "duration": 1.6 },
+        { "type": "sfx", "name": "marker", "at": 0.8 },
+        { "type": "sticker", "text": "extrem prekär", "variant": "accent", "x": 0.66, "y": 0.2, "at": 2.3, "duration": 1.4 },
+        { "type": "sfx", "name": "pop", "at": 2.3 },
+        { "type": "draw", "shape": "arrow", "from": [0.7, 0.27], "to": [0.5, 0.36], "at": 2.5, "duration": 1.2, "color": "white" }
+      ]
+    },
+    {
+      "id": "studis", "type": "clip", "src": "raw/interview.mp4", "in": 15.58, "out": 17.09, "transition": "zoom", "cutout": true,
+      "overlays": [
+        { "type": "headline", "kicker": "Studierende", "text": "JEDER ZWEITE", "position": "center", "at": 0.1, "duration": 1.35, "behind": true },
+        { "type": "shake", "at": 0.1, "duration": 0.4 },
+        { "type": "sfx", "name": "impact", "at": 0.1, "align": "peak" }
+      ]
+    },
+    { "id": "antwort", "type": "clip", "src": "raw/interview.mp4", "in": 26.89, "out": 28.4, "transition": "slide-up" },
+    {
+      "id": "talkshows", "type": "clip", "src": "raw/interview.mp4", "in": 31.23, "out": 34.98, "transition": "flash",
+      "overlays": [
+        { "type": "sticker", "text": "Talkshows 📺", "x": 0.5, "y": 0.24, "at": 0.1, "duration": 1.0 },
+        { "type": "sfx", "name": "pop", "at": 0.1 },
+        { "type": "sticker", "text": "Polizei 🚓", "variant": "accent", "x": 0.5, "y": 0.24, "at": 1.12, "duration": 1.5 },
+        { "type": "shake", "at": 1.12, "duration": 0.5, "strength": 1.2 },
+        { "type": "sfx", "name": "boom", "at": 1.12, "align": "peak" }
+      ]
+    },
+    {
+      "id": "ende", "type": "cta", "title": "Kommentiert „Bewegung“", "subtitle": "bdas.de", "duration": 2.6, "transition": "light-leak",
+      "overlays": [{ "type": "lottie", "src": "lottie/ring.json", "x": 0.5, "y": 0.3, "size": 0.3, "at": 0.3, "duration": 1.6 }]
+    }
+  ],
+  "overlays": [
+    { "type": "logo", "at": "hook.start", "until": "ende.start", "position": "top-left" },
+    { "type": "sfx", "name": "riser-short", "at": "talkshows.start", "align": "peak", "volume": 0.4 },
+    { "type": "draw", "shape": "underline", "x": 0.66, "y": 0.245, "w": 0.34, "at": "bar.5", "duration": 0.6, "color": "white" }
+  ]
+}

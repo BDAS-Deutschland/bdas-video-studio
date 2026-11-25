@@ -1,0 +1,149 @@
+{
+  "whoosh": {
+    "file": "whoosh.wav",
+    "duration": 0.5,
+    "peak": 0.305,
+    "volume": 0.6,
+    "description": "Mittlerer Whoosh – Übergänge, hereinfliegende Karten"
+  },
+  "whoosh-long": {
+    "file": "whoosh-long.wav",
+    "duration": 0.9,
+    "peak": 0.554,
+    "volume": 0.6,
+    "description": "Langer, tiefer Whoosh – große Übergänge, Zoom"
+  },
+  "whip": {
+    "file": "whip.wav",
+    "duration": 0.24,
+    "peak": 0.094,
+    "volume": 0.55,
+    "description": "Kurzer, heller Peitschen-Whoosh – Whip-Pans"
+  },
+  "swish": {
+    "file": "swish.wav",
+    "duration": 0.32,
+    "peak": 0.154,
+    "volume": 0.5,
+    "description": "Luftiges Wischen – Wipes, Slides"
+  },
+  "pop": {
+    "file": "pop.wav",
+    "duration": 0.12,
+    "peak": 0.005,
+    "volume": 0.7,
+    "description": "Pop – Sticker, Emojis, Text erscheint"
+  },
+  "click": {
+    "file": "click.wav",
+    "duration": 0.045,
+    "peak": 0.005,
+    "volume": 0.6,
+    "description": "UI-Klick – Buttons, Tippen"
+  },
+  "tap": {
+    "file": "tap.wav",
+    "duration": 0.09,
+    "peak": 0.005,
+    "volume": 0.6,
+    "description": "Weiches Tippen – Handy-Bedienung"
+  },
+  "tick": {
+    "file": "tick.wav",
+    "duration": 0.03,
+    "peak": 0.005,
+    "volume": 0.35,
+    "description": "Kurzes Ticken – Zähler (stat), Countdown"
+  },
+  "ding": {
+    "file": "ding.wav",
+    "duration": 2.3,
+    "peak": 0.032,
+    "volume": 0.45,
+    "description": "Glocke – Aha-Moment, richtige Antwort"
+  },
+  "notify": {
+    "file": "notify.wav",
+    "duration": 1.3,
+    "peak": 0.126,
+    "volume": 0.5,
+    "description": "Zwei-Ton-Benachrichtigung – notify-Overlay"
+  },
+  "success": {
+    "file": "success.wav",
+    "duration": 1.4,
+    "peak": 0.222,
+    "volume": 0.45,
+    "description": "Aufsteigendes Arpeggio – Erfolg, „Gefolgt ✓“"
+  },
+  "fail": {
+    "file": "fail.wav",
+    "duration": 1.05,
+    "peak": 0.021,
+    "volume": 0.55,
+    "description": "Komisches Wah-wah – Fail, Selbstironie"
+  },
+  "boom": {
+    "file": "boom.wav",
+    "duration": 1.8,
+    "peak": 0.081,
+    "volume": 1.0,
+    "description": "Tiefer Bass-Schlag – Pointe, Enthüllung, Hook"
+  },
+  "impact": {
+    "file": "impact.wav",
+    "duration": 1.6,
+    "peak": 0.033,
+    "volume": 0.7,
+    "description": "Harter Treffer mit Hall – Headline knallt rein"
+  },
+  "riser": {
+    "file": "riser.wav",
+    "duration": 2.0,
+    "peak": 1.98,
+    "volume": 0.5,
+    "description": "Spannungsaufbau (2 s) – vor einer Enthüllung"
+  },
+  "riser-short": {
+    "file": "riser-short.wav",
+    "duration": 1.0,
+    "peak": 0.978,
+    "volume": 0.5,
+    "description": "Kurzer Spannungsaufbau (1 s)"
+  },
+  "glitch": {
+    "file": "glitch.wav",
+    "duration": 0.36,
+    "peak": 0.005,
+    "volume": 0.4,
+    "description": "Digitale Störung – Glitch-Übergang, Fehler"
+  },
+  "typing": {
+    "file": "typing.wav",
+    "duration": 1.6,
+    "peak": 0.025,
+    "volume": 0.5,
+    "description": "Tastatur-Tippen – Kommentar wird getippt"
+  },
+  "shutter": {
+    "file": "shutter.wav",
+    "duration": 0.3,
+    "peak": 0.005,
+    "volume": 0.6,
+    "description": "Kamera-Auslöser – Screenshot, Foto erscheint"
+  },
+  "marker": {
+    "file": "marker.wav",
+    "duration": 0.55,
+    "peak": 0.167,
+    "volume": 0.5,
+    "description": "Filzstift – gezeichnete Kreise, Pfeile, Unterstreichungen"
+  },
+  "rewind": {
+    "file": "rewind.wav",
+    "duration": 0.7,
+    "peak": 0.457,
+    "volume": 0.5,
+    "description": "Zurückspulen – Rückblende, „Moment mal“"
+  }
+}

@@ -26,11 +26,16 @@ export function argValue(args, flag) {
 export function build(name, { formatOverride, quiet = false } = {}) {
   const dir = projectDir(name);
   const brand = JSON.parse(fs.readFileSync(path.join(ROOT, "brand/brand.json"), "utf8"));
-  const { timeline, loadWords, loadMeta } = loadProject(dir);
-  const resolved = resolveTimeline(timeline, { brand, loadWords, loadMeta, formatOverride });
+  const { timeline, ...ctx } = loadProject(dir, { brandDir: path.join(ROOT, "brand") });
+  const resolved = resolveTimeline(timeline, { ...ctx, brand, formatOverride });
 
   const buildDir = path.join(dir, ".build");
   fs.mkdirSync(buildDir, { recursive: true });
+  // Soundeffekte aus brand/sfx in den Projektordner kopieren (Remotion liest nur aus dem Projektordner).
+  if (resolved.usedSfx.length) {
+    fs.mkdirSync(path.join(buildDir, "sfx"), { recursive: true });
+    for (const f of resolved.usedSfx) fs.copyFileSync(path.join(ROOT, "brand/sfx", f), path.join(buildDir, "sfx", f));
+  }
   const logoSrc = brand.logo ? path.join(ROOT, "brand", brand.logo) : null;
   if (logoSrc && fs.existsSync(logoSrc)) {
     const dest = `.build/brand-logo${path.extname(logoSrc)}`;
@@ -46,6 +51,9 @@ export function build(name, { formatOverride, quiet = false } = {}) {
     if (s.type === "clip" && !fs.existsSync(path.join(dir, s.src))) resolved.errors.push(`Szene "${s.id}": Datei fehlt: ${s.src}`);
   }
 
+  for (const o of resolved.props.overlays) {
+    if ((o.type === "media" || o.type === "audio") && !fs.existsSync(path.join(dir, o.src))) resolved.errors.push(`Overlay ${o.type}: Datei fehlt: ${o.src}`);
+  }
   if (!quiet) console.log(formatTable(resolved));
   for (const w of resolved.warnings) console.warn(`⚠ ${w}`);
   if (resolved.errors.length) {

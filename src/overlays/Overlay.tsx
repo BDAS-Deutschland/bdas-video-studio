@@ -1,4 +1,6 @@
-import { AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { Draw, Flash, Leak, LottieOverlay, Sfx } from "./Effects";
+import { Button, Comment, Headline, Media, Notify, Stat, Sticker } from "./Graphics";
 import { useLayout } from "../layout";
 import type { Brand, SceneOverlay } from "../types";
 
@@ -104,8 +106,8 @@ const BigText = ({ text, position = "center", brand }: { text: string; position?
 const Logo = ({ position = "top-left", brand }: { position?: string; brand: Brand }) => {
   const { enter, exit } = useInOut();
   const { unit, left, right, top, bottom } = useLayout();
-  const size = 110 * unit;
-  const style: React.CSSProperties = { position: "absolute", height: size, opacity: enter * exit };
+  const size = 140 * unit;
+  const style: React.CSSProperties = { position: "absolute", height: size, opacity: enter * exit, filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.35))" };
   if (position === "top-left") Object.assign(style, { top, left });
   if (position === "top-right") Object.assign(style, { top, right });
   if (position === "bottom-right") Object.assign(style, { bottom, right });
@@ -126,6 +128,21 @@ const Logo = ({ position = "top-left", brand }: { position?: string; brand: Bran
   );
 };
 
+const AudioClip = ({ src, from = 0, volume = 1 }: { src: string; from?: number; volume?: number }) => {
+  const { fps, durationInFrames } = useVideoConfig();
+  const frame = useCurrentFrame();
+  // Kurz ein- und ausblenden, damit kein Knacken entsteht.
+  // Bei sehr kurzen Effekten (z. B. Klick, 10 Frames) Rampen verkürzen, damit die Stützstellen steigend bleiben.
+  const d = Math.max(3, durationInFrames);
+  const rampIn = Math.max(1, Math.min(4, Math.floor(d / 3)));
+  const rampOutStart = Math.max(rampIn + 1, d - Math.max(1, Math.min(6, Math.floor(d / 3))));
+  const ramp = interpolate(frame, [0, rampIn, rampOutStart, d], [0, 1, 1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  return <Audio src={staticFile(src)} trimBefore={Math.round(from * fps)} volume={() => volume * ramp} />;
+};
+
 export const Overlay = ({ overlay, brand }: { overlay: SceneOverlay; brand: Brand }) => {
   switch (overlay.type) {
     case "title":
@@ -134,5 +151,31 @@ export const Overlay = ({ overlay, brand }: { overlay: SceneOverlay; brand: Bran
       return <BigText text={overlay.text} position={overlay.position} brand={brand} />;
     case "logo":
       return <Logo position={overlay.position} brand={brand} />;
+    case "media":
+      return <Media o={overlay} brand={brand} />;
+    case "headline":
+      return <Headline o={overlay} brand={brand} />;
+    case "stat":
+      return <Stat o={overlay} brand={brand} />;
+    case "sticker":
+      return <Sticker o={overlay} brand={brand} />;
+    case "comment":
+      return <Comment o={overlay} brand={brand} />;
+    case "notify":
+      return <Notify o={overlay} brand={brand} />;
+    case "button":
+      return <Button o={overlay} brand={brand} />;
+    case "audio":
+      return <AudioClip src={overlay.src} from={overlay.from} volume={overlay.volume} />;
+    case "sfx":
+      return <Sfx o={overlay} />;
+    case "draw":
+      return <Draw o={overlay} brand={brand} />;
+    case "lottie":
+      return <LottieOverlay o={overlay} />;
+    case "leak":
+      return <Leak o={overlay} />;
+    case "flash":
+      return <Flash o={overlay} />;
   }
 };

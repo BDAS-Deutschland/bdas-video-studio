@@ -1,7 +1,9 @@
-// Stufe 1: Rohmaterial einlesen – Metadaten, Kontaktbögen, Szenenwechsel, Transkript.
+// Stufe 1: Rohmaterial einlesen – Metadaten, Kontaktbögen, Szenenwechsel, Transkript,
+// dazu (mit Python-Werkzeugen) Tracking, Hook-Kandidaten und Beats der Musik.
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { analyseClip, analyseMusic, fixWords } from "./lib/analysis.mjs";
 import { ROOT, argValue, fail, projectDir } from "./lib/project.mjs";
 import { clipSlug } from "./lib/timeline.mjs";
 
@@ -139,13 +141,24 @@ for (const f of files) {
       console.log(`  ${meta.sceneChanges.length} Szenenwechsel`);
     }
     if (meta.hasAudio) {
-      const words = transcribe(file, out);
+      let words = transcribe(file, out);
+      fs.rmSync(path.join(out, "words.whisper.json"), { force: true });
       fs.writeFileSync(path.join(out, "words.json"), JSON.stringify(words, null, 1));
+      console.log(`  ${words.length} Wörter transkribiert`);
+      try {
+        words = fixWords(file, out);
+      } catch (e) {
+        console.warn(`  ⚠ Wortzeiten nicht geprüft: ${e.message}`);
+      }
       fs.writeFileSync(path.join(out, "transcript.md"), transcriptMarkdown(slug, words));
       meta.words = words.length;
-      console.log(`  ${words.length} Wörter transkribiert`);
     }
     fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2));
+    try {
+      analyseClip(file, out, meta, { force: true });
+    } catch (e) {
+      console.warn(`  ⚠ ${e.message}`);
+    }
   }
   index.push({ slug, ...JSON.parse(fs.readFileSync(metaPath, "utf8")) });
 }
@@ -172,6 +185,12 @@ if (!fs.existsSync(clipsMd)) {
     clipsMd,
     `# Drehprotokoll\n\n<!-- Claude füllt das aus: pro Clip Inhalt, beste Momente (Zeitbereich + Zitat), Probleme, Eignung. Siehe CLAUDE.md, Stufe 1. -->\n\n${index.map((m) => `## ${m.slug}\n`).join("\n")}`,
   );
+}
+
+try {
+  analyseMusic(dir);
+} catch (e) {
+  console.warn(`⚠ ${e.message}`);
 }
 
 console.log(`\n✓ ${index.length} Datei(en) eingelesen → ${path.relative(ROOT, logDir)}/index.md`);

@@ -1,10 +1,16 @@
 node_modules/
 models/
 .env
-projects/*/raw/
-projects/*/renders/
-projects/*/.build/
-projects/*/music/*.mp3
-projects/*/music/*.wav
-projects/_test/
 .DS_Store
+.venv/
+.probe/
+
+# Projekte bleiben lokal: eigenes Rohmaterial, Fremdmaterial mit ungeklärten Rechten, erkennbare Personen (DSGVO).
+/projects/
+# Referenzvideos fremder Accounts
+/brand/refs/
+
+# Remotion-Skills (remotion-dev/skills, ohne Lizenz) – werden von pnpm bootstrap installiert
+.agents/
+.claude/skills/
+skills-lock.json

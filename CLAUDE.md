@@ -33,8 +33,13 @@ An den ⛔-Punkten **anhalten und auf den Nutzer warten.** Nicht über eine Frei
 - `log/<clip>/meta.json` – Dauer, Auflösung, fps, hat Ton
 - `log/<clip>/sheet_000-024s.jpg` usw. – Kontaktbögen, **1 Bild pro Sekunde, 6 Spalten × 4 Zeilen = 24 s pro Bogen**, zeilenweise von links oben nach rechts unten. Der Dateiname nennt den Zeitbereich; Bild Nr. k (ab 0) zeigt Sekunde Start + k.
 - `log/<clip>/scenes.txt` – erkannte Schnitte/Szenenwechsel (Sekunden)
-- `log/<clip>/words.json` – Transkript, **jedes Wort mit Start/Ende in Sekunden**
+- `log/<clip>/words.json` – Transkript, **jedes Wort mit Start/Ende in Sekunden**. Wörter, die Whisper in eine Stille gelegt hat (typisch nach langen Pausen), sind schon an den Sprechbeginn verschoben; das Original steht in `words.whisper.json`.
 - `log/<clip>/transcript.md` – lesbares Transkript mit Zeitmarken
+- `log/<clip>/track.md` (+ `track.json`) – Gesicht und Gesten (MediaPipe): wo das Gesicht ist (je Sekunde), Gesten mit Zeit und Bildposition („zeigt nach rechts“, „Hand oben“)
+- `log/<clip>/hooks.md` (+ `energy.json`) – Sätze mit der meisten Energie (Lautstärke, Tempo, Tonhöhe) = Hook-Kandidaten; Pausen ≥ 0,5 s
+- `log/music_<datei>/beats.json` – für jede Datei in `music/`: BPM, Schläge, Takte, starke Einsätze
+
+Für schon eingelesenes Material: `pnpm analyze <name>` (holt Tracking, Hooks, Beats nach; `--words` korrigiert zusätzlich die Wortzeiten).
 
 Danach schreibt Claude `log/clips.md` – das Drehprotokoll. Pro Clip:
 - Was ist zu sehen (Personen, Ort, Einstellung, Licht)
@@ -46,7 +51,8 @@ Danach schreibt Claude `log/clips.md` – das Drehprotokoll. Pro Clip:
 - Kontaktbögen einmal ansehen, dann nur noch `clips.md` lesen. Bilder nicht erneut laden, wenn das Protokoll reicht.
 - Schnittzeiten **immer aus `words.json`** (wortgenau), nie aus den Kontaktbögen schätzen. Bögen sind 1-s-genau.
 - Einen Schnitt nicht mitten ins Wort legen: `in` = Start des ersten Worts minus ~0,1 s, `out` = Ende des letzten Worts plus ~0,15 s.
-- Claude hört nichts. Alles über Ton kommt aus dem Transkript und `meta.json`.
+- Claude hört nichts. Alles über Ton kommt aus Transkript, `meta.json` und `hooks.md`. Hook-Kandidaten aus `hooks.md` sind Vorschläge, kein Urteil – mit dem Inhalt abgleichen.
+- Gesten und Gesichtsposition aus `track.md` nehmen statt sie auf Kontaktbögen zu vermessen.
 
 ## Stufe 2 – Briefing
 
@@ -71,6 +77,9 @@ Format siehe unten. Danach immer `pnpm resolve <name>`: zeigt die aufgelöste Ze
 - Text lang genug sichtbar? Faustregel: 0,3 s pro Wort, mindestens 1,2 s
 - Abgeschnittene Wörter, schwarze Bilder, falsche Clips
 - Logo und Farben laut `brand/brand.json`
+- Übergänge: Szenen müssen mindestens halb so lang sein wie ihre Übergänge; Einzelbilder mitten im Übergang ansehen
+
+`pnpm render` gleicht die Lautheit automatisch auf −14 LUFS an (Ausgabe „Lautheit: … → … LUFS“).
 
 Gefundene Fehler selbst beheben, dann erst dem Nutzer zeigen.
 
@@ -126,16 +135,45 @@ Vollständiges, lauffähiges Beispiel: `templates/timeline.example.json`.
 
 Dateipfade (`src`, `music.src`) sind relativ zum Projektordner. Musik liegt in `projects/<name>/music/` oder wird aus `brand/music/` dorthin kopiert.
 
+### Effekte für Social-Media-Schnitt
+
+Weitere Overlays (`media`, `headline`, `stat`, `sticker`, `comment`, `notify`, `button`, `audio`) stehen in `learnings.md` unter „Technik“. Vollständiges Beispiel mit allen Effekten: `templates/timeline.effects.json`.
+
+**Übergänge** (`"transition"` an der Szene, in die übergeblendet wird; String oder `{ "type", "duration", "sfx", "sfxVolume" }`). Sie liegen mittig um den Schnitt – **Zeiten und Anker ändern sich nicht**. Der Ton schneidet hart wie bisher. Bei Clips wird der Vor-/Nachlauf aus dem Quellmaterial gespielt (stumm), sonst als Standbild.
+- schnell/viral: `whip-left|right|up|down` (0,27 s), `zoom` (0,35 s), `push` (0,3 s), `slide-…` (0,4 s)
+- weich/edel: `crossfade`, `zoom-in-out`, `cross-zoom`, `linear-blur`, `dreamy`, `ripple`, `crosswarp`
+- grafisch: `wipe-…`, `cube-…`, `flip-…`, `swap`, `iris`, `clock`
+- harter Schnitt mit Effekt: `light-leak` (0,8 s, rötlich), `flash` (0,3 s, weiß)
+- Richtungswort = Bewegung des Bildes (`slide-left`: neues Bild kommt von rechts). Jeder Übergang bringt seinen Sound mit (whip, whoosh, swish …); `"sfx": false` schaltet ihn ab, `"transitionSfx": false` oben schaltet alle ab.
+
+**Sounds:** `{ "type": "sfx", "name": "boom", "at": 2.1, "align": "peak", "volume": 0.8 }` – Bibliothek in `brand/sfx/` (Liste mit Beschreibung: `brand/sfx/sfx.json`, Vorhören: `brand/sfx/_vorschau.wav`). `"align": "peak"` legt den lautesten Moment auf `at` (Bass-Schlag genau auf das Wort, Riser endet genau am Schnitt). `"sfxVolume"` oben skaliert alle Effekte.
+
+**Bewegung:**
+- `punch` (nur in Clip-Szenen) – schneller Zoom auf ein Wort: `{ "type": "punch", "at": 1.2, "duration": 0.8, "scale": 1.15, "origin": "face", "ease": "snap" | "smooth" }`
+- `shake` – Kamerawackeln: `{ "type": "shake", "at": …, "duration": 0.35, "strength": 1 }`
+- Clip-Szene `"origin": "face"` (Zoom-Mittelpunkt aufs Gesicht), `"follow": "face"` (Bildausschnitt folgt dem Gesicht, z. B. 16:9-Material im 9:16-Format). Braucht `track.json`.
+
+**Grafik:**
+- `draw` – mit dem Stift gezeichnet: `"shape": "circle" | "underline" | "box" | "check" | "cross"` mit `x`, `y` (Mitte), `w`, optional `h`; `"arrow"` mit `from: [x, y]`, `to: [x, y]`, `curve`. `color`: `accent` (Standard) / `white` / `dark`, `drawTime` (s). Alles in Anteilen des Bildes. Passender Sound: `marker`.
+- `lottie` – Lottie-Animation: `src` (Projektdatei) oder `name` (aus `brand/lottie/`), `x`, `y`, `size` (Breite als Anteil), `loop`, `rate`
+- `leak`, `flash` – auch frei als Overlay (`seed`, `hue` bzw. `color`)
+
+**Text hinter der Person:** Clip-Szene `"cutout": true`, dann `pnpm cutout <name>` (≈ 9 s Rechenzeit je Sekunde Video). Overlays mit `"behind": true` liegen zwischen Video und freigestellter Person. Wirkt nur, wo Kopf oder Körper den Text überdecken (z. B. `headline` mit `"position": "center"`).
+
+**Beat-Anker:** Mit Musik und `beats.json` gibt es `beat.N`, `bar.N` (Takt-Eins) und `hit.N` (starke Einsätze), 1-basiert, in Videozeit: `"at": "bar.4"`, `"at": "hit.1-0.1"`. `"music": { "from": 12.5 }` startet die Musik später im Stück (Anker verschieben sich mit). `pnpm resolve` zeigt die Takte.
+
 ---
 
 ## Werkzeuge und Grenzen
 
-- Rendern: Remotion (React). Studio zum Ansehen: `pnpm studio <name>`.
+- Rendern: Remotion (React). Studio zum Ansehen: `pnpm studio <name>`. WebGL ist an (`remotion.config.ts`), nötig für Shader-Übergänge und Light Leaks.
+- Remotion-Wissen: Skills `remotion-best-practices`, `remotion-docs` u. a. in `.claude/skills/` (aktualisieren: `npx remotion skills update`). Vor neuen Remotion-Bausteinen dort nachlesen statt aus dem Gedächtnis.
 - Video/Ton: ffmpeg. Transkript: whisper.cpp (lokal, Modell in `models/`).
+- Analyse offline in `.venv` (Python 3.12): MediaPipe (Gesicht, Gesten, Freisteller), librosa (Beats, Energie). Einrichtung: `pnpm bootstrap`. Sounds neu erzeugen: `pnpm sfx`.
 - Generiertes Material (Stimme, Bilder, B-Roll) nur nach Rückfrage und mit dem Budget, das der Nutzer nennt. Schlüssel stehen in `.env`, nie in Dateien unter `projects/`.
 - Musik nur mit klarer Lizenz; Quelle und Lizenz in `projects/<name>/music/LICENSE.txt` notieren.
 - Erkennbare Personen brauchen eine Einwilligung (DSGVO). Im Zweifel beim Nutzer nachfragen.
 
 ## Marke
 
-`brand/brand.json`: Akzent `#d12020` nur für Hervorhebungen und Karten-Hintergründe, nie als Fließtextfarbe. Text in `#333` / `#555` / `#888`. Keine anderen Farben ohne Rückfrage.
+`brand/brand.json`: Akzent `#d12020` nur für Hervorhebungen und Karten-Hintergründe, nie als Fließtextfarbe. Text in `#333` / `#555` / `#888`. Keine anderen Farben ohne Rückfrage. Light Leaks sind standardmäßig rot (`hue` 40); andere Farbtöne nur nach Rückfrage.

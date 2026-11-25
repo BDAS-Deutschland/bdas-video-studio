@@ -1,0 +1,8 @@
+# Lokale Analyse-Werkzeuge (kostenlos, laufen offline). Einrichtung: pnpm bootstrap
+# Getestet mit Python 3.12 (uv venv .venv --python 3.12).
+mediapipe==0.10.35
+opencv-contrib-python-headless==4.14.0.94
+numpy==2.5.5
+librosa==0.11.0
+soundfile==0.14.0
+scipy==1.18.1

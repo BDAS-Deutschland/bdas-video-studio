@@ -6,19 +6,30 @@
     "bootstrap": "bash scripts/setup.sh",
     "new": "bash scripts/new-project.sh",
     "ingest": "node scripts/ingest.mjs",
+    "analyze": "node scripts/analyze.mjs",
     "resolve": "node scripts/resolve.mjs",
     "studio": "node scripts/studio.mjs",
     "render": "node scripts/render.mjs",
     "qc": "node scripts/qc.mjs",
+    "cutout": "node scripts/cutout.mjs",
+    "sfx": ".venv/bin/python scripts/py/make_sfx.py brand/sfx",
     "test": "node --test test/*.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@remotion/cli": "4.0.541",
-    "@remotion/google-fonts": "4.0.541",
+    "@remotion/cli": "4.0.547",
+    "@remotion/effects": "4.0.547",
+    "@remotion/google-fonts": "4.0.547",
+    "@remotion/lottie": "4.0.547",
+    "@remotion/motion-blur": "4.0.547",
+    "@remotion/noise": "4.0.547",
+    "@remotion/paths": "4.0.547",
+    "@remotion/shapes": "4.0.547",
+    "@remotion/transitions": "4.0.547",
+    "lottie-web": "5.13.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "remotion": "4.0.541"
+    "remotion": "4.0.547"
   },
   "devDependencies": {
     "@types/react": "19.1.8",
