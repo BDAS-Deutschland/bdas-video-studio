@@ -1,0 +1,19 @@
+{
+  "name": "BDAS",
+  "colors": {
+    "accent": "#d12020",
+    "background": "#ffffff",
+    "surface": "#f5f5f5",
+    "inkStrong": "#333333",
+    "inkBody": "#555555",
+    "inkMuted": "#888888",
+    "onAccent": "#ffffff"
+  },
+  "font": "Inter",
+  "logo": "logo.png",
+  "radius": 12,
+  "captions": {
+    "maxWordsPerChunk": 4,
+    "highlight": "#d12020"
+  }
+}

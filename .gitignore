@@ -1,0 +1,10 @@
+node_modules/
+models/
+.env
+projects/*/raw/
+projects/*/renders/
+projects/*/.build/
+projects/*/music/*.mp3
+projects/*/music/*.wav
+projects/_test/
+.DS_Store

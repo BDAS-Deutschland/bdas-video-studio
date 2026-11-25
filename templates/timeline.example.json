@@ -1,0 +1,17 @@
+{
+  "format": "9:16",
+  "fps": 30,
+  "captions": true,
+  "music": { "src": "music/track.mp3", "volume": 0.2, "duckTo": 0.05 },
+  "scenes": [
+    {
+      "id": "hook", "type": "clip", "src": "raw/interview.mp4", "in": 0.0, "out": 2.15,
+      "overlays": [{ "type": "title", "text": "Alex Muster", "subtitle": "BDAS Berlin", "at": 0.2, "duration": 1.9 }]
+    },
+    { "id": "fakt", "type": "card", "title": "14 Städte", "subtitle": "ein Netzwerk", "duration": 2, "transition": "fade" },
+    { "id": "beleg", "type": "clip", "src": "raw/interview.mp4", "in": 1.9, "out": 7.8,
+      "overlays": [{ "type": "text", "text": "Ganz Deutschland", "position": "top", "at": 0.5, "duration": 1.8 }] },
+    { "id": "ende", "type": "cta", "title": "Mach mit", "subtitle": "bdas.de", "duration": 2.5 }
+  ],
+  "overlays": [{ "type": "logo", "at": "hook.start", "until": "ende.start", "position": "top-left" }]
+}
