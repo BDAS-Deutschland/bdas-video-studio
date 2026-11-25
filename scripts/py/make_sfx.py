@@ -380,7 +380,7 @@ def main(out_dir):
     (out / "sfx.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
     (out / "LICENSE.txt").write_text(
         "Alle Effekte in diesem Ordner sind selbst erzeugt (Synthese mit scripts/py/make_sfx.py),\n"
-        "keine Fremdaufnahmen. Frei verwendbar für BDAS, keine Namensnennung nötig.\n"
+        "keine Fremdaufnahmen. Lizenz: MIT wie das ganze Repository (siehe LICENSE), keine Namensnennung im Video nötig.\n"
         "Neu erzeugen: pnpm sfx\n"
         "_vorschau.wav spielt alle Effekte in der Reihenfolge von sfx.json (mit Standard-Lautstärke).\n"
     )

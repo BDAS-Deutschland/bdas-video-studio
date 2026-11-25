@@ -1,6 +1,7 @@
 {
   "name": "bdas-video-studio",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "bootstrap": "bash scripts/setup.sh",

@@ -1,4 +1,4 @@
 Alle Effekte in diesem Ordner sind selbst erzeugt (Synthese mit scripts/py/make_sfx.py),
-keine Fremdaufnahmen. Frei verwendbar für BDAS, keine Namensnennung nötig.
+keine Fremdaufnahmen. Lizenz: MIT wie das ganze Repository (siehe LICENSE), keine Namensnennung im Video nötig.
 Neu erzeugen: pnpm sfx
 _vorschau.wav spielt alle Effekte in der Reihenfolge von sfx.json (mit Standard-Lautstärke).

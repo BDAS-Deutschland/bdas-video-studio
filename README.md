@@ -41,3 +41,7 @@ pnpm render mein-video --format 16:9   # Variante
 `pnpm test` prüft die Zeitleisten-Logik (Anker, Übergänge, Sounds, Beats, Untertitel, Wortzeiten, Fehlermeldungen).
 
 Remotion ist für Einzelpersonen, gemeinnützige Organisationen und Firmen bis 3 Personen kostenlos; Lizenz unter remotion.dev/license prüfen.
+
+## Lizenz
+
+[MIT](LICENSE) – gilt für Code, Vorlagen, Doku und die selbst erzeugten Soundeffekte in `brand/sfx/`. Ausgenommen sind Name und Logo der BDAS (`brand/logo.png`).
